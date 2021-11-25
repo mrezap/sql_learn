@@ -75,3 +75,25 @@ ON b.kode_transaksi = c.kode_transaksi
 GROUP BY 1,2
 ORDER BY 3 DESC
 LIMIT 1
+
+/*Tampilkan daftar pelanggan yang belum pernah melakukan transaksi.
+Nama kolom yang harus ditampilkan: kode_pelanggan, nama_pelanggan, alamat.*/
+
+SELECT a.kode_pelanggan, a.nama_pelanggan, a.alamat
+FROM ms_pelanggan a
+LEFT JOIN tr_penjualan b
+ON a.kode_pelanggan = b.kode_pelanggan
+WHERE b.kode_transaksi IS NULL
+
+/*Tampilkan transaksi-transaksi yang memiliki jumlah item produk lebih dari 1 jenis produk. Dengan lain kalimat, tampilkan transaksi-transaksi yang memiliki jumlah baris data pada table tr_penjualan_detail lebih dari satu.
+Nama kolom yang harus ditampilkan:  kode_transaksi, kode_pelanggan, nama_pelanggan, tanggal_transaksi, jumlah_detail.*/
+
+
+SELECT a.kode_transaksi, a.kode_pelanggan, b.nama_pelanggan, a.tanggal_transaksi, COUNT(c.kode_transaksi) AS jumlah_detail
+FROM tr_penjualan a
+JOIN ms_pelanggan b
+ON a.kode_pelanggan = b.kode_pelanggan
+JOIN tr_penjualan_detail c
+ON a.kode_transaksi = c.kode_transaksi
+GROUP BY 1,2,3,4
+HAVING COUNT(c.kode_transaksi) > 1
